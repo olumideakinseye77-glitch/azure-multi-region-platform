@@ -5,3 +5,6 @@ crash.log
 *.tfvars
 *.tfplan
 .DS_Store
+
+# Local Terraform plans
+*.tfplan
