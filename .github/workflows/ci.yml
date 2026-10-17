@@ -1,0 +1,49 @@
+name: Validate app and Terraform
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install app dependencies
+        run: pip install -r app/requirements.txt
+
+      - name: Test health endpoint
+        working-directory: app
+        run: |
+          python - <<'PY'
+          from app import app
+          response = app.test_client().get("/health")
+          assert response.status_code == 200
+          assert response.get_json() == {"status": "healthy"}
+          print("Health endpoint test passed")
+          PY
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.16.0"
+
+      - name: Check Terraform formatting
+        run: terraform fmt -check -recursive terraform
+
+      - name: Initialize for validation
+        run: terraform -chdir=terraform init -backend=false -lockfile=readonly
+
+      - name: Validate Terraform
+        run: terraform -chdir=terraform validate
