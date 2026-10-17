@@ -1,10 +1,10 @@
 # Azure Highly Available Multi-Region Platform
 
-An in-progress Azure Cloud Engineering learning lab. Building on my networking and identity projects, I am challenging myself to deploy an application across two regions, route requests through Azure Front Door and test how the platform behaves during an application outage.
+An Azure Cloud Engineering portfolio lab built to challenge myself with regional resilience. Building on my networking and identity projects, I deployed an application across two regions, routed requests through Azure Front Door and tested its behaviour during an application outage.
 
 ## Project Status
 
-**Current phase:** Core platform, access logging, CI and read-only Azure OIDC verified. Alert rule deployed; alert firing and notification delivery remain untested.
+**Status:** Core portfolio lab complete, with documented limitations. Regional routing, access logging, CI, read-only Azure OIDC, alert firing and automatic resolution are verified. A final Terraform plan reported no changes on 17 October 2026.
 
 ## Architecture
 
@@ -44,13 +44,14 @@ Terraform manages the platform using remote state in Azure Storage. GitHub Actio
 - [x] Configure Azure Front Door Standard
 - [x] Configure health probes and load balancing
 - [x] Validate active-active routing
-- [ ] Complete regional outage and recovery validation (initial test recorded one HTTP 403)
+- [x] Perform an initial regional outage and recovery test (one HTTP 403 recorded; uninterrupted availability not established)
 - [x] Add monitoring and operational evidence
 - [x] Add GitHub Actions CI
 - [x] Add Azure OIDC authentication
 - [x] Document current architecture, troubleshooting and limitations
-- [ ] Validate alert firing and resolution
-- [ ] Configure and test notification delivery
+- [x] Validate alert firing and automatic resolution
+
+Optional improvements: timed outage testing, investigation of the recorded HTTP 403, and an action group with verified notification delivery.
 
 ## Regions
 
@@ -74,7 +75,9 @@ The platform should continue serving user traffic when one application region be
 - Front Door access and health-probe diagnostic categories are enabled and directed to a 30-day Log Analytics workspace.
 - A KQL query returned 23 access-log records; all 23 had HTTP status 200. Health-probe log ingestion has not yet been verified.
 - The enabled origin-health alert evaluates each origin/origin-group series every minute and checks whether average health is below 90% over five minutes.
-- Alert deployment is confirmed in Terraform state and a subsequent plan reported no changes. Firing, resolution and notification delivery have not been tested; no action group is connected.
+- During the 17 October 2026 UK South outage test, the alert fired at 16:47:27 UTC. After the app restarted and origin health recovered, the alert condition changed to Resolved. The API response did not provide a resolution timestamp. See [alert validation evidence](docs/alert-validation.md).
+- A final Terraform plan reported no changes, and both workflows passed for evidence commit `944d4a0`.
+- Notification delivery has not been configured or tested; no action group is connected.
 - Logging began after the first outage test, so those logs cannot establish the cause of the earlier HTTP 403.
 
 ## GitHub Actions evidence
