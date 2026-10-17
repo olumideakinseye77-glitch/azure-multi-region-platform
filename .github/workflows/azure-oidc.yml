@@ -1,0 +1,30 @@
+name: Verify Azure OIDC
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Sign in to Azure with OIDC
+        uses: azure/login@v2
+        with:
+          client-id: d2174071-dfcf-4711-8649-70128e32859b
+          tenant-id: f7a4a0bf-cedb-46e1-aeae-d875e38e3dbf
+          subscription-id: 0be06fbd-8a1c-4544-8855-fcea8dfd8a76
+
+      - name: Verify project read access
+        run: |
+          az group show \
+            --name rg-olu-multi-region-platform \
+            --query "{Name:name,Location:location}" \
+            --output json
