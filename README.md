@@ -6,6 +6,10 @@ An Azure Cloud Engineering portfolio lab built to challenge myself with regional
 
 **Status:** Core portfolio lab complete, with documented limitations. Regional routing, access logging, CI, read-only Azure OIDC, alert firing and automatic resolution are verified. A final Terraform plan reported no changes on 17 October 2026.
 
+**Live demo:** Offline. The platform was deployed and tested on Azure, then intentionally decommissioned on 18 October 2026 to avoid ongoing demo infrastructure charges. Terraform reported 14 resources destroyed, and Azure confirmed that `rg-olu-multi-region-platform` no longer existed. Application code, Terraform configuration and recorded validation evidence remain in this repository for review and future redeployment.
+
+The architecture below shows the tested deployment, rather than currently running resources. Redeployment requires provisioning the infrastructure and deploying the application code.
+
 ## Architecture
 
 ```mermaid
@@ -86,6 +90,7 @@ The platform should continue serving user traffic when one application region be
 - [Successful Azure OIDC verification run](https://github.com/olumideakinseye77-glitch/azure-multi-region-platform/actions/runs/39049879898): Azure login without a client secret, followed by a resource-group read.
 - The dedicated service principal has Reader access scoped to this project's resource group. Its federated credential trusts this repository's main branch.
 - These workflows demonstrate CI and authentication verification, not automated deployment.
+- The OIDC run linked above is historical deployment evidence. Its resource-group read will fail while the demo resource group is absent; backend-free app and Terraform validation can still run.
 
 ## Troubleshooting lessons
 
@@ -98,7 +103,9 @@ The platform should continue serving user traffic when one application region be
 
 ## Cost and operational limits
 
-Two B1 plans, Front Door Standard, log ingestion and metric alerts can incur charges. Stopping a web app does not stop its App Service plan charges. The workspace's 0.1 GB daily cap is an ingestion control, not a guaranteed spending limit. The earlier Traffic Manager experiment may also incur charges while it remains deployed.
+The live lab resources, including the earlier Traffic Manager experiment in the project resource group, were removed on 18 October 2026. The separate Terraform state storage was not part of this destruction and may still incur storage charges; its cleanup review is separate. Previously incurred charges remain payable.
+
+While deployed, two B1 plans, Front Door Standard, log ingestion and metric alerts can incur charges. Stopping a web app alone does not stop its App Service plan charges. The workspace's 0.1 GB daily cap is an ingestion control, not a guaranteed spending limit.
 
 ## What I want to learn next
 
