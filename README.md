@@ -1,5 +1,8 @@
 # Azure Highly Available Multi-Region Platform
 
+[Portfolio home](https://github.com/olumideakinseye77-glitch/it-cloud-portfolio) · [All Azure projects](https://github.com/olumideakinseye77-glitch/it-cloud-portfolio/tree/main/azure-projects)
+
+
 An Azure Cloud Engineering portfolio lab built to challenge myself with regional resilience. Building on my networking and identity projects, I deployed an application across two regions, routed requests through Azure Front Door and tested its behaviour during an application outage.
 
 ## Project Status
